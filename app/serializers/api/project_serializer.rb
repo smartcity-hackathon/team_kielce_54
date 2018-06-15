@@ -11,7 +11,7 @@ module API
 
     def tags
       ActiveModel::SerializableResource.new(
-        object.tags.push(budget_tag),
+        (object.tags + Array.wrap(budget_tag)),
         each_serializer: TagSerializer
       ).as_json
     end
