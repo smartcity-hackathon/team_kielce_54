@@ -20,4 +20,8 @@ class Project < ApplicationRecord
     ready_for_city_voting: 'ready_for_city_voting',
     rejected: 'rejected'
   }
+
+  def self.archived
+    where('EXTRACT(YEAR FROM created_at) < EXTRACT(YEAR FROM now())')
+  end
 end
