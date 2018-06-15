@@ -12,9 +12,16 @@ require 'rspec/rails'
 
 ActiveRecord::Migration.maintain_test_schema!
 
+SeedFu.quiet = true
+
 RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   config.use_transactional_fixtures = true
+  config.profile_examples = false
+
+  config.before(:all) do
+    SeedFu.seed
+  end
 end
 
 Shoulda::Matchers.configure do |config|

@@ -22,6 +22,7 @@ Metrics/LineLength:
     - config/**/**.rb
     - Gemfile
     - Rakefile
+    - spec/**/**.rb
 
 Metrics/BlockLength:
   Exclude:
