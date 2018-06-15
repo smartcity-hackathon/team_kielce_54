@@ -115,7 +115,7 @@ RSpec.describe API::ProjectsController, type: :request do
         }]
       }]
 
-      get '/api/categories/sport/projects', params: { per_page: 2, page: 1 }
+      get '/api/categories/sport/projects/archived', params: { per_page: 2, page: 1 }
 
       expect(response).to be_successful
       expect(response.parsed_body).to eq(expected_response)

@@ -21,6 +21,10 @@ class Project < ApplicationRecord
     rejected: 'rejected'
   }
 
+  def self.active
+    where('EXTRACT(YEAR FROM created_at) = EXTRACT(YEAR FROM now())')
+  end
+
   def self.archived
     where('EXTRACT(YEAR FROM created_at) < EXTRACT(YEAR FROM now())')
   end

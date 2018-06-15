@@ -6,7 +6,7 @@ module API
       category = Category.find_by(name: params[:category_name])
 
       projects = paginate(
-        relation: category.projects.includes(:tags, comments: :user),
+        relation: category.projects.active.includes(:tags, comments: :user),
         page: params[:page].to_i,
         per_page: params[:per_page].to_i
       )
