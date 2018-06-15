@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  has_many :projects, dependent: :destroy
+
   def password
     @password ||= BCrypt::Password.new(encrypted_password)
   end

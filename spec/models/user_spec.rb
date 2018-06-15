@@ -9,6 +9,8 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_db_index(:email).unique(true) }
   it { is_expected.to have_db_index(:username).unique(true) }
 
+  it { is_expected.to have_many(:projects).dependent(:destroy) }
+
   describe 'secure password' do
     it 'has encrypted password' do
       user = User.new(email: 'test@example.com', username: 'test', password: 's0hard!')
