@@ -17,6 +17,7 @@ SeedFu.quiet = true
 RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   config.use_transactional_fixtures = true
+  config.profile_examples = false
 
   config.before(:all) do
     SeedFu.seed

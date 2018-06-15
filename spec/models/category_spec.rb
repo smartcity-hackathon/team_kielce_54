@@ -2,6 +2,6 @@
 
 require 'rails_helper'
 
-RSpec.describe Category do
-  it { is_expected.to have_db_column(:name).with_options(null: false) }
+RSpec.describe Category, type: :model do
+  it { is_expected.to have_db_column(:name).of_type(:string).with_options(null: false) }
 end
