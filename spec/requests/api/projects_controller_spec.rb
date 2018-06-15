@@ -37,7 +37,10 @@ RSpec.describe API::ProjectsController, type: :request do
         'user' => {
           'id'       => user.id,
           'username' => user.username
-        }
+        },
+        'tags' => [
+          { 'name' => 'small' }
+        ]
       }]
 
       get '/api/categories/sport/projects', params: { per_page: 2, page: 1 }
