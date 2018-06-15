@@ -2,6 +2,7 @@
 
 module API
   class ProjectSerializer < ActiveModel::Serializer
+    has_many :comments, serializer: CommentSerializer
     belongs_to :category, serializer: CategorySerializer
     belongs_to :user, serializer: UserSerializer
 

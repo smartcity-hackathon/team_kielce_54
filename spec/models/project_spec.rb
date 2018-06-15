@@ -18,6 +18,7 @@ RSpec.describe Project, type: :model do
 
   it { is_expected.to have_many(:tags_projects).dependent(:destroy) }
   it { is_expected.to have_many(:tags).through(:tags_projects) }
+  it { is_expected.to have_many(:comments) }
   it { is_expected.to belong_to(:category).with_foreign_key(:category_id) }
   it { is_expected.to belong_to(:user).with_foreign_key(:user_id) }
 end

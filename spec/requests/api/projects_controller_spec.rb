@@ -11,7 +11,7 @@ RSpec.describe API::ProjectsController, type: :request do
         email: 'test@example.com',
         password: 's0hard!'
       )
-      Project.create(
+      project = Project.create(
         title: 'Test Project',
         description: 'tasty test',
         lat: nil,
@@ -20,6 +20,11 @@ RSpec.describe API::ProjectsController, type: :request do
         budget_type: Project.budget_types[:small],
         votes_count: 5,
         category: sport_category,
+        user: user
+      )
+      Comment.create(
+        content: 'great project!',
+        project: project,
         user: user
       )
       expected_response = [{
@@ -40,7 +45,14 @@ RSpec.describe API::ProjectsController, type: :request do
         },
         'tags' => [
           { 'name' => 'small' }
-        ]
+        ],
+        'comments' => [{
+          'content' => 'great project!',
+          'user' => {
+            'id'       => user.id,
+            'username' => user.username
+          }
+        }]
       }]
 
       get '/api/categories/sport/projects', params: { per_page: 2, page: 1 }

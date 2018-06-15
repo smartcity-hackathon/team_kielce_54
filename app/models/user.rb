@@ -2,6 +2,7 @@
 
 class User < ApplicationRecord
   has_many :projects, dependent: :destroy
+  has_many :comments, dependent: :destroy
 
   def password
     @password ||= BCrypt::Password.new(encrypted_password)

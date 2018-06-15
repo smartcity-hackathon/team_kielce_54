@@ -6,11 +6,11 @@ module API
       category = Category.find_by(name: params[:category_name])
 
       projects = paginate(
-        relation: category.projects,
+        relation: category.projects.includes(:tags, comments: :user),
         page: params[:page].to_i,
         per_page: params[:per_page].to_i
       )
-      render json: projects
+      render json: projects, include: ['comments.user', 'user', 'category']
     end
   end
 end

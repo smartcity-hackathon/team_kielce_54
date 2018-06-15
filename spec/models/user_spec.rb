@@ -10,6 +10,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_db_index(:username).unique(true) }
 
   it { is_expected.to have_many(:projects).dependent(:destroy) }
+  it { is_expected.to have_many(:comments).dependent(:destroy) }
 
   describe 'secure password' do
     it 'has encrypted password' do
