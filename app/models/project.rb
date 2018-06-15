@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Project < ApplicationRecord
+  has_many :tags_projects, dependent: :destroy
+  has_many :tags, through: :tags_projects
   belongs_to :category, foreign_key: :category_id, inverse_of: :projects
   belongs_to :user, foreign_key: :user_id, inverse_of: :projects
 

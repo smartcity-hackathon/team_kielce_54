@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_15_200047) do
+ActiveRecord::Schema.define(version: 2018_06_15_222941) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,20 @@ ActiveRecord::Schema.define(version: 2018_06_15_200047) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "tags", force: :cascade do |t|
+    t.string "name", null: false
+    t.boolean "approved", default: false, null: false
+    t.index ["name"], name: "index_tags_on_name", unique: true
+  end
+
+  create_table "tags_projects", force: :cascade do |t|
+    t.bigint "tag_id"
+    t.bigint "project_id"
+    t.index ["project_id"], name: "index_tags_projects_on_project_id"
+    t.index ["tag_id", "project_id"], name: "index_tags_projects_on_tag_id_and_project_id", unique: true
+    t.index ["tag_id"], name: "index_tags_projects_on_tag_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", null: false
     t.string "encrypted_password", null: false
@@ -44,4 +58,6 @@ ActiveRecord::Schema.define(version: 2018_06_15_200047) do
 
   add_foreign_key "projects", "categories"
   add_foreign_key "projects", "users"
+  add_foreign_key "tags_projects", "projects"
+  add_foreign_key "tags_projects", "tags"
 end
