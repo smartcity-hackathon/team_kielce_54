@@ -29,7 +29,8 @@ RSpec.describe API::ProjectsController, type: :request do
           user: user
         )
         expected_response = [{
-          'title' => 'Test Project',
+          'id'          => project.id,
+          'title'       => 'Test Project',
           'description' => 'tasty test',
           'lat'         => nil,
           'lng'         => nil,
@@ -72,7 +73,7 @@ RSpec.describe API::ProjectsController, type: :request do
           email: 'test@example.com',
           password: 's0hard!'
         )
-        Project.create(
+        project = Project.create(
           title: 'Test Project',
           description: 'tasty test',
           lat: nil,
@@ -84,7 +85,8 @@ RSpec.describe API::ProjectsController, type: :request do
           user: user
         )
         expected_response = [{
-          'title' => 'Test Project',
+          'id'          => project.id,
+          'title'       => 'Test Project',
           'description' => 'tasty test',
           'lat'         => nil,
           'lng'         => nil,
@@ -138,6 +140,7 @@ RSpec.describe API::ProjectsController, type: :request do
         user: user
       )
       expected_response = [{
+        'id'          => project.id,
         'title'       => 'Test Project',
         'description' => 'tasty test',
         'lat'         => nil,
@@ -167,6 +170,68 @@ RSpec.describe API::ProjectsController, type: :request do
       }]
 
       get '/api/categories/sport/projects/archived', params: { per_page: 2, page: 1 }
+
+      expect(response).to be_successful
+      expect(response.parsed_body).to eq(expected_response)
+    end
+  end
+
+  describe 'GET #show' do
+    it 'is success and returns jsoned project' do
+      sport_category = Category.find_by(name: 'sport')
+      user = User.create(
+        username: 'testuser',
+        email: 'test@example.com',
+        password: 's0hard!'
+      )
+      project = Project.create(
+        title: 'Test Project',
+        description: 'tasty test',
+        lat: nil,
+        lng: nil,
+        place: 'marketplace',
+        budget_type: Project.budget_types[:small],
+        votes_count: 5,
+        category: sport_category,
+        user: user,
+        created_at: Date.new.change(year: 1.year.ago.year)
+      )
+      Comment.create(
+        content: 'great project!',
+        project: project,
+        user: user
+      )
+      expected_response = {
+        'id'          => project.id,
+        'title'       => 'Test Project',
+        'description' => 'tasty test',
+        'lat'         => nil,
+        'lng'         => nil,
+        'place'       => 'marketplace',
+        'votes_count' => 5,
+        'status'      => 'submitted',
+        'is_archived' => true,
+        'category'    => {
+          'id'   => sport_category.id,
+          'name' => sport_category.name
+        },
+        'user' => {
+          'id'       => user.id,
+          'username' => user.username
+        },
+        'tags' => [
+          { 'name' => 'small' }
+        ],
+        'comments' => [{
+          'content' => 'great project!',
+          'user' => {
+            'id'       => user.id,
+            'username' => user.username
+          }
+        }]
+      }
+
+      get "/api/categories/sport/projects/#{project.id}"
 
       expect(response).to be_successful
       expect(response.parsed_body).to eq(expected_response)
