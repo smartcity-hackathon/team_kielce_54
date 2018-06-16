@@ -3,7 +3,7 @@
 Rails.application.routes.draw do
   namespace :api do
     resources :categories, only: :index, param: :name do
-      resources :projects, only: :index do
+      resources :projects, only: %i[index show] do
         get :archived, on: :collection
       end
     end
