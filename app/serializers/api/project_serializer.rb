@@ -10,8 +10,11 @@ module API
                :status, :votes_count, :tags
 
     def tags
+      tags_to_serialize = object.tags
+      tags_to_serialize += Array.wrap(budget_tag) if object.budget_type.present?
+
       ActiveModel::SerializableResource.new(
-        (object.tags + Array.wrap(budget_tag)),
+        tags_to_serialize,
         each_serializer: TagSerializer
       ).as_json
     end
