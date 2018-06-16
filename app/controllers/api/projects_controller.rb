@@ -22,6 +22,17 @@ module API
       render json: project, include: ['comments.user', 'user', 'category']
     end
 
+    def create
+      authorize Project
+
+      form = ProjectForm.new(project_form_params)
+      if form.save
+        render json: form.project, status: :created
+      else
+        render json: form.errors, status: :unprocessable_entity
+      end
+    end
+
     private
 
     def set_category
@@ -31,10 +42,13 @@ module API
     end
 
     def project_form_params
-      params.require(:project).permit!(
+      params.require(:project).permit(
         :title, :description, :lat, :lng, :place,
-        :budget_type, tags: []
-      )
+        :budget_type, tags: %i[id name]
+      ).tap do |whitelisted|
+        whitelisted[:category] = @category
+        whitelisted[:user] = User.last
+      end
     end
 
     def paginate_projects(projects_relation)

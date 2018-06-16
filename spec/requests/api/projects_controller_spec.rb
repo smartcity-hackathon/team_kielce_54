@@ -261,4 +261,65 @@ RSpec.describe API::ProjectsController, type: :request do
       expect(response.parsed_body).to eq(expected_response)
     end
   end
+
+  describe 'POST #create' do
+    def create_project(user, category)
+      Project.create(
+        title: 'Test Project',
+        description: 'tasty test',
+        lat: nil, lng: nil,
+        place: 'marketplace',
+        budget_type: Project.budget_types[:small],
+        votes_count: 5,
+        category: category,
+        user: user
+      )
+    end
+
+    context 'when user already created 3 other projects' do
+      it 'is 403 forbiden' do
+        sport_category = Category.find_by(name: 'sport')
+        user = User.create(
+          username: 'testuser',
+          email: 'test@example.com',
+          password: 's0hard!'
+        )
+        3.times { create_project(user, sport_category) }
+
+        post '/api/categories/sport/projects', params: { project: { title: 'Cool one!' } }
+
+        expect(response).to be_forbidden
+      end
+    end
+
+    context 'when form fails to save' do
+      it 'renders form errors as 422' do
+        post '/api/categories/sport/projects', params: { project: { title: '' } }
+
+        expect(response).to be_unprocessable
+        expect(response.parsed_body).to include('title' => ["can't be blank"])
+      end
+    end
+
+    context 'when form saves successfuly' do
+      it 'is created and renders project json' do
+        sport_category = Category.find_by(name: 'sport')
+        user           = User.first
+        project_params = {
+          title: 'super project',
+          description: 'water park',
+          category: sport_category,
+          user: user,
+          tags: [
+            { name: 'Kate Moss' }
+          ]
+        }
+
+        post '/api/categories/sport/projects', params: { project: project_params }
+
+        expect(response).to be_created
+        expect(response.parsed_body['tags'].length).to eq(1)
+      end
+    end
+  end
 end
