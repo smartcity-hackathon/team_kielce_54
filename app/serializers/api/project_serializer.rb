@@ -6,7 +6,7 @@ module API
     belongs_to :category, serializer: CategorySerializer
     belongs_to :user, serializer: UserSerializer
 
-    attributes :title, :description, :lat, :lng, :place, :is_archived,
+    attributes :id, :title, :description, :lat, :lng, :place, :is_archived,
                :status, :votes_count, :tags
 
     # rubocop:disable Naming/PredicateName

@@ -29,7 +29,8 @@ RSpec.describe API::ProjectsController, type: :request do
           user: user
         )
         expected_response = [{
-          'title' => 'Test Project',
+          'id'          => project.id,
+          'title'       => 'Test Project',
           'description' => 'tasty test',
           'lat'         => nil,
           'lng'         => nil,
@@ -72,7 +73,7 @@ RSpec.describe API::ProjectsController, type: :request do
           email: 'test@example.com',
           password: 's0hard!'
         )
-        Project.create(
+        project = Project.create(
           title: 'Test Project',
           description: 'tasty test',
           lat: nil,
@@ -84,7 +85,8 @@ RSpec.describe API::ProjectsController, type: :request do
           user: user
         )
         expected_response = [{
-          'title' => 'Test Project',
+          'id'          => project.id,
+          'title'       => 'Test Project',
           'description' => 'tasty test',
           'lat'         => nil,
           'lng'         => nil,
@@ -138,6 +140,7 @@ RSpec.describe API::ProjectsController, type: :request do
         user: user
       )
       expected_response = [{
+        'id'          => project.id,
         'title'       => 'Test Project',
         'description' => 'tasty test',
         'lat'         => nil,
@@ -199,6 +202,7 @@ RSpec.describe API::ProjectsController, type: :request do
         user: user
       )
       expected_response = {
+        'id'          => project.id,
         'title'       => 'Test Project',
         'description' => 'tasty test',
         'lat'         => nil,
