@@ -2,28 +2,54 @@
 
 module API
   class ProjectsController < BaseController
+    before_action :set_category
+
     def index
-      category = Category.find_by(name: params[:category_name])
-      projects = paginate_projects(category.projects.active)
+      projects = paginate_projects(@category.projects.active)
 
       render json: projects, include: ['comments.user', 'user', 'category']
     end
 
     def archived
-      category = Category.find_by(name: params[:category_name])
-      projects = paginate_projects(category.projects.archived)
+      projects = paginate_projects(@category.projects.archived)
 
       render json: projects, include: ['comments.user', 'user', 'category']
     end
 
     def show
-      category = Category.find_by(name: params[:category_name])
-      project = category.projects.find params[:id]
+      project = @category.projects.find params[:id]
 
       render json: project, include: ['comments.user', 'user', 'category']
     end
 
+    def create
+      authorize Project
+
+      form = ProjectForm.new(project_form_params)
+      if form.save
+        render json: form.project, status: :created
+      else
+        render json: form.errors, status: :unprocessable_entity
+      end
+    end
+
     private
+
+    def set_category
+      @category = Category.find_by(name: params[:category_name])
+
+      head :not_found unless @category
+    end
+
+    def project_form_params
+      params.require(:project).permit(
+        :title, :description, :lat, :lng, :place,
+        :budget_type, tags: %i[id name]
+      ).tap do |whitelisted|
+        whitelisted[:category] = @category
+        whitelisted[:user] = User.last
+      end
+    end
 
     def paginate_projects(projects_relation)
       paginate(
