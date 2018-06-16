@@ -19,7 +19,7 @@ module API
       tags_to_serialize = object.tags
       tags_to_serialize += Array.wrap(budget_tag) if object.budget_type.present?
 
-      ActiveModel::SerializableResource.new(
+      ActiveModelSerializers::SerializableResource.new(
         tags_to_serialize,
         each_serializer: TagSerializer
       ).as_json
