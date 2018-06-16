@@ -10,8 +10,10 @@ AllCops:
     - db/fixtures/*.rb
 
 Style/Documentation:
-  Include:
-    - lib/**/*.rb
+  Enabled: false
+
+RSpec/AnyInstance:
+  Enabled: false
 
 Metrics/LineLength:
   AllowHeredoc: true

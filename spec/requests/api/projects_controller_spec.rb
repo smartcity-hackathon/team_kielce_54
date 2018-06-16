@@ -3,6 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe API::ProjectsController, type: :request do
+  def stub_sign_in_as(user)
+    allow_any_instance_of(API::BaseController).to receive(:current_user).and_return(user)
+  end
+
   describe 'GET #index' do
     context 'when category does not exist' do
       it 'is 404 not found' do
@@ -286,6 +290,7 @@ RSpec.describe API::ProjectsController, type: :request do
         )
         3.times { create_project(user, sport_category) }
 
+        stub_sign_in_as(user)
         post '/api/categories/sport/projects', params: { project: { title: 'Cool one!' } }
 
         expect(response).to be_forbidden
@@ -294,6 +299,9 @@ RSpec.describe API::ProjectsController, type: :request do
 
     context 'when form fails to save' do
       it 'renders form errors as 422' do
+        user = User.first
+
+        stub_sign_in_as(user)
         post '/api/categories/sport/projects', params: { project: { title: '' } }
 
         expect(response).to be_unprocessable
@@ -315,6 +323,7 @@ RSpec.describe API::ProjectsController, type: :request do
           ]
         }
 
+        stub_sign_in_as(user)
         post '/api/categories/sport/projects', params: { project: project_params }
 
         expect(response).to be_created
