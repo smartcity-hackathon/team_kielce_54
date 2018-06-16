@@ -6,19 +6,6 @@ require 'support/controller_helpers'
 RSpec.describe API::My::ProjectsController, type: :request do
   include ControllerHelpers
 
-  def create_project(user, category)
-    Project.create(
-      title: 'Test Project',
-      description: 'tasty test',
-      lat: nil, lng: nil,
-      place: 'marketplace',
-      budget_type: Project.budget_types[:small],
-      votes_count: 5,
-      category: category,
-      user: user
-    )
-  end
-
   describe 'GET #index' do
     it 'is successful and returns current user\'s projects' do
       user = User.create(

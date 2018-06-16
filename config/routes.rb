@@ -10,6 +10,8 @@ Rails.application.routes.draw do
     resources :categories, only: :index, param: :name do
       resources :projects, only: %i[index show create] do
         get :archived, on: :collection
+
+        resources :comments, only: %i[index create]
       end
     end
   end

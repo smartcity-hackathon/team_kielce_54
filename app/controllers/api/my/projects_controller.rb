@@ -6,7 +6,7 @@ module API
       def index
         projects = Project.active.where(user_id: current_user.id)
 
-        render json: projects, include: ['comments.user', 'user', 'category']
+        render json: projects, include: %w[comments user category]
       end
     end
   end
