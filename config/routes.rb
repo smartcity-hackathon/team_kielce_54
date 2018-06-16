@@ -2,6 +2,8 @@
 
 Rails.application.routes.draw do
   namespace :api do
+    resources :sessions, only: :create
+
     resources :categories, only: :index, param: :name do
       resources :projects, only: %i[index show create] do
         get :archived, on: :collection

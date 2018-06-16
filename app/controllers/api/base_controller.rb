@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'users/jwt_auth'
+
 module API
   class BaseController < ActionController::Base
     include Pundit
@@ -13,7 +15,9 @@ module API
     end
 
     def current_user
-      User.last
+      token = request.headers['AuthorizationUserToken']
+
+      Users::JWTAuth.decode_user_from_token(token)
     end
   end
 end
