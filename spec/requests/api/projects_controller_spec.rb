@@ -4,6 +4,14 @@ require 'rails_helper'
 
 RSpec.describe API::ProjectsController, type: :request do
   describe 'GET #index' do
+    context 'when category does not exist' do
+      it 'is 404 not found' do
+        get '/api/categories/not-existing/projects'
+
+        expect(response).to be_not_found
+      end
+    end
+
     context 'with correct budget type' do
       it 'is success and returns jsoned projects' do
         sport_category = Category.find_by(name: 'sport')
@@ -66,6 +74,14 @@ RSpec.describe API::ProjectsController, type: :request do
     end
 
     context 'with null budget_type and no other tags' do
+      context 'when category does not exist' do
+        it 'is 404 not found' do
+          get '/api/categories/not-existing/projects'
+
+          expect(response).to be_not_found
+        end
+      end
+
       it 'is still success, but tags are empty array' do
         sport_category = Category.find_by(name: 'sport')
         user = User.create(
@@ -177,6 +193,14 @@ RSpec.describe API::ProjectsController, type: :request do
   end
 
   describe 'GET #show' do
+    context 'when category does not exist' do
+      it 'is 404 not found' do
+        get '/api/categories/not-existing/projects'
+
+        expect(response).to be_not_found
+      end
+    end
+
     it 'is success and returns jsoned project' do
       sport_category = Category.find_by(name: 'sport')
       user = User.create(
