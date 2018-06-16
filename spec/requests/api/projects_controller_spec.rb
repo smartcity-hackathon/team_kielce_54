@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'support/controller_helpers'
 
 RSpec.describe API::ProjectsController, type: :request do
-  def stub_sign_in_as(user)
-    allow_any_instance_of(API::BaseController).to receive(:current_user).and_return(user)
-  end
+  include ControllerHelpers
 
   describe 'GET #index' do
     context 'when category does not exist' do
