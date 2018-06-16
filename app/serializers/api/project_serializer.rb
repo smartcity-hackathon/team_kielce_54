@@ -6,8 +6,14 @@ module API
     belongs_to :category, serializer: CategorySerializer
     belongs_to :user, serializer: UserSerializer
 
-    attributes :title, :description, :lat, :lng, :place,
+    attributes :title, :description, :lat, :lng, :place, :is_archived,
                :status, :votes_count, :tags
+
+    # rubocop:disable Naming/PredicateName
+    def is_archived
+      object.archived?
+    end
+    # rubocop:enable Naming/PredicateName
 
     def tags
       tags_to_serialize = object.tags

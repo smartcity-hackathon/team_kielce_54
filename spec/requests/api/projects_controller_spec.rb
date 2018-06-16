@@ -5,107 +5,109 @@ require 'rails_helper'
 RSpec.describe API::ProjectsController, type: :request do
   describe 'GET #index' do
     context 'with correct budget type' do
-			it 'is success and returns jsoned projects' do
-				sport_category = Category.find_by(name: 'sport')
-				user = User.create(
-					username: 'testuser',
-					email: 'test@example.com',
-					password: 's0hard!'
-				)
-				project = Project.create(
-					title: 'Test Project',
-					description: 'tasty test',
-					lat: nil,
-					lng: nil,
-					place: 'marketplace',
-					budget_type: Project.budget_types[:small],
-					votes_count: 5,
-					category: sport_category,
-					user: user
-				)
-				Comment.create(
-					content: 'great project!',
-					project: project,
-					user: user
-				)
-				expected_response = [{
-					'title'       => 'Test Project',
-					'description' => 'tasty test',
-					'lat'         => nil,
-					'lng'         => nil,
-					'place'       => 'marketplace',
-					'votes_count' => 5,
-					'status'      => 'submitted',
-					'category'    => {
-						'id'   => sport_category.id,
-						'name' => sport_category.name
-					},
-					'user' => {
-						'id'       => user.id,
-						'username' => user.username
-					},
-					'tags' => [
-						{ 'name' => 'small' }
-					],
-					'comments' => [{
-						'content' => 'great project!',
-						'user' => {
-							'id'       => user.id,
-							'username' => user.username
-						}
-					}]
-				}]
+      it 'is success and returns jsoned projects' do
+        sport_category = Category.find_by(name: 'sport')
+        user = User.create(
+          username: 'testuser',
+          email: 'test@example.com',
+          password: 's0hard!'
+        )
+        project = Project.create(
+          title: 'Test Project',
+          description: 'tasty test',
+          lat: nil,
+          lng: nil,
+          place: 'marketplace',
+          budget_type: Project.budget_types[:small],
+          votes_count: 5,
+          category: sport_category,
+          user: user
+        )
+        Comment.create(
+          content: 'great project!',
+          project: project,
+          user: user
+        )
+        expected_response = [{
+          'title' => 'Test Project',
+          'description' => 'tasty test',
+          'lat'         => nil,
+          'lng'         => nil,
+          'place'       => 'marketplace',
+          'votes_count' => 5,
+          'status'      => 'submitted',
+          'is_archived' => false,
+          'category'    => {
+            'id' => sport_category.id,
+            'name' => sport_category.name
+          },
+          'user' => {
+            'id' => user.id,
+            'username' => user.username
+          },
+          'tags' => [
+            { 'name' => 'small' }
+          ],
+          'comments' => [{
+            'content' => 'great project!',
+            'user' => {
+              'id' => user.id,
+              'username' => user.username
+            }
+          }]
+        }]
 
-				get '/api/categories/sport/projects', params: { per_page: 2, page: 1 }
+        get '/api/categories/sport/projects', params: { per_page: 2, page: 1 }
 
-				expect(response).to be_successful
-				expect(response.parsed_body).to eq(expected_response)
-			end
+        expect(response).to be_successful
+        expect(response.parsed_body).to eq(expected_response)
+      end
     end
 
     context 'with null budget_type and no other tags' do
       it 'is still success, but tags are empty array' do
-				sport_category = Category.find_by(name: 'sport')
-				user = User.create(
-					username: 'testuser',
-					email: 'test@example.com',
-					password: 's0hard!'
-				)
-				project = Project.create(
-					title: 'Test Project',
-					description: 'tasty test',
-					lat: nil,
-					lng: nil,
-					place: 'marketplace',
-					budget_type: nil,
-					votes_count: 5,
-					category: sport_category,
-					user: user
-				)
-				expected_response = [{
-					'title'       => 'Test Project',
-					'description' => 'tasty test',
-					'lat'         => nil,
-					'lng'         => nil,
-					'place'       => 'marketplace',
-					'votes_count' => 5,
-					'status'      => 'submitted',
-					'category'    => {
-						'id'   => sport_category.id,
-						'name' => sport_category.name
-					},
-					'user' => {
-						'id'       => user.id,
-						'username' => user.username
-					},
-					'tags' => [],
-					'comments' => []
-				}]
+        sport_category = Category.find_by(name: 'sport')
+        user = User.create(
+          username: 'testuser',
+          email: 'test@example.com',
+          password: 's0hard!'
+        )
+        Project.create(
+          title: 'Test Project',
+          description: 'tasty test',
+          lat: nil,
+          lng: nil,
+          place: 'marketplace',
+          budget_type: nil,
+          votes_count: 5,
+          category: sport_category,
+          user: user
+        )
+        expected_response = [{
+          'title' => 'Test Project',
+          'description' => 'tasty test',
+          'lat'         => nil,
+          'lng'         => nil,
+          'place'       => 'marketplace',
+          'votes_count' => 5,
+          'status'      => 'submitted',
+          'is_archived' => false,
+          'category'    => {
+            'id' => sport_category.id,
+            'name' => sport_category.name
+          },
+          'user' => {
+            'id' => user.id,
+            'username' => user.username
+          },
+          'tags' => [],
+          'comments' => []
+        }]
 
-				get '/api/categories/sport/projects', params: { per_page: 2, page: 1 }
+        get '/api/categories/sport/projects', params: { per_page: 2, page: 1 }
 
-				expect(response).to be_successful
-				expect(response.parsed_body).to eq(expected_response)
+        expect(response).to be_successful
+        expect(response.parsed_body).to eq(expected_response)
       end
     end
   end
@@ -143,6 +145,7 @@ RSpec.describe API::ProjectsController, type: :request do
         'place'       => 'marketplace',
         'votes_count' => 5,
         'status'      => 'submitted',
+        'is_archived' => true,
         'category'    => {
           'id'   => sport_category.id,
           'name' => sport_category.name

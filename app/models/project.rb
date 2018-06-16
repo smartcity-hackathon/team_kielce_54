@@ -28,4 +28,8 @@ class Project < ApplicationRecord
   def self.archived
     where('EXTRACT(YEAR FROM created_at) < EXTRACT(YEAR FROM now())')
   end
+
+  def archived?
+    created_at.year < Time.zone.now.year
+  end
 end

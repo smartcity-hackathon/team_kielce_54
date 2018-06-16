@@ -21,4 +21,18 @@ RSpec.describe Project, type: :model do
   it { is_expected.to have_many(:comments) }
   it { is_expected.to belong_to(:category).with_foreign_key(:category_id) }
   it { is_expected.to belong_to(:user).with_foreign_key(:user_id) }
+
+  describe '#archived?' do
+    it 'is true if project is not from current year' do
+      project = Project.new(created_at: 1.year.ago)
+
+      expect(project).to be_archived
+    end
+
+    it 'is false if project is from current year' do
+      project = Project.new(created_at: 1.hour.ago)
+
+      expect(project).not_to be_archived
+    end
+  end
 end
