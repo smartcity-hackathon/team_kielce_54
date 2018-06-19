@@ -1,0 +1,48 @@
+require: rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 2.4
+  Exclude:
+    - db/schema.rb
+    - db/migrate/*
+    - vendor/**/**
+    - bin/*
+    - db/fixtures/*.rb
+
+Style/Documentation:
+  Enabled: false
+
+RSpec/AnyInstance:
+  Enabled: false
+
+Metrics/LineLength:
+  AllowHeredoc: true
+  AllowURI: true
+  URISchemes:
+    - https
+    - http
+  Exclude:
+    - config/**/**.rb
+    - Gemfile
+    - Rakefile
+    - spec/**/**.rb
+
+Metrics/BlockLength:
+  Exclude:
+    - config/environments/**.rb
+    - config/routes.rb
+    - spec/**/**.rb
+
+Rails:
+  Enabled: true
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
+
+
